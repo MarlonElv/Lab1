@@ -1,6 +1,6 @@
 //
-//modified by:     Marlon ELvir test
-//date:            8/27/24
+//modified by:     Marlon ELvir
+//date:            8/30/24
 //
 //original author: Gordon Griesel
 //date:            Fall 2024
@@ -30,6 +30,7 @@ public:
 	float w;
 	float vel;
 	float pos[2];
+	bool windsm;
 	Global() {
 		xres = 400;
 		yres = 200;
@@ -37,6 +38,7 @@ public:
 		vel = 30.0f;
 		pos[0] = 0.0f + w;
 		pos[1] = yres / 2.0f;
+		windsm = false; 
 	}
 } g;
 
@@ -171,6 +173,14 @@ void X11_wrapper::check_resize(XEvent *e)
 		//Window size did change.
 		reshape_window(xce.width, xce.height);
 	}
+
+	//
+	if (g.xres < 170){
+		g.windsm = true;
+	} else {
+		g.windsm = false;
+	}
+	//
 }
 //-----------------------------------------------------------------------------
 
@@ -267,13 +277,21 @@ void physics()
 
 }
 
+
 void render()
 {
 	//
 	glClear(GL_COLOR_BUFFER_BIT);
 	//draw the box
 	glPushMatrix();
-	glColor3ub(100, 120, 220);
+	//glColor3ub(100, 120, 220);
+
+	if(g.windsm) {
+		glColor3ub(235, 64, 52);
+	} else {
+		glColor3ub(100, 120, 220);
+	}
+
 	glTranslatef(g.pos[0], g.pos[1], 0.0f);
 	glBegin(GL_QUADS);
 		glVertex2f(-g.w, -g.w);
